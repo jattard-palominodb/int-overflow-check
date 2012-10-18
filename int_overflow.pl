@@ -33,9 +33,23 @@ sub main {
   my $int_us = 4294967295;
   my $bigint_us = 18446744073709551615;
   
+  # Database to be reviewed
+  my $host = "localhost";
+  my $port = 3306;
+  my $user = "root";
+  my $pass = "pass"; 
+  
+  # Database holding review info
+  my $host_r = "localhost";
+  my $port_r = 3306;
+  my $user_r = "root";
+  my $pass_r = "pass";
+  
   # Initialize connections to database
-  my $dbn="dbi:mysql:information_schema:localhost:3306";
-  my $dbh=DBI->connect($dbn, "root", "pass") or die "Unable to connect: $DBI::errstr\n";
+  my $dbn="dbi:mysql:information_schema:".$host.":".$port;
+  my $dbh=DBI->connect($dbn, $user, $pass) or die "Unable to connect: $DBI::errstr\n";
+  my $dbn_r="dbi:mysql:information_schema:".$host_r.":".$port_r;
+  my $dbh_r=DBI->connect($dbn_r, $user_r, $pass_r) or die "Unable to connect: $DBI::errstr\n";
   my $select_query="select table_schema, table_name, column_name, column_type from columns where table_schema = 'ebonydb' and column_type like '%int%'";
   my $select_h = $dbh->prepare($select_query) or die "Unable to prepare: $DBI::errstr\n";
   $select_h->execute() or die "Unable to execute: $DBI::errstr\n";
@@ -89,12 +103,14 @@ sub main {
                 
     # Insert review information into palomino schema in a time series fashion
     my $insert_review="insert into palomino.int_overflow values (\'$table_schema\', \'$table_name\', \'$column_name\', \'$int_type\', $max_int, $of_pct, now\(\))";
-    my $select_h3 = $dbh->prepare($insert_review) or die "Unable to prepare: $DBI::errstr\n";
+    my $select_h3 = $dbh_r->prepare($insert_review) or die "Unable to prepare: $DBI::errstr\n";
     $select_h3->execute() or die "Unable to execute: $DBI::errstr\n";
+    $select_h3->finish();
   }
   
   # Save the environment and close connections to database
-  $select_h->finish();  
+  $select_h->finish();
   $dbh->disconnect;
+  $dbh_r->disconnect;
   
 }
