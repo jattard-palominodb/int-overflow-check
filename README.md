@@ -1,16 +1,21 @@
-GitHub Flavored Markdown
+Integer Overflow MySQL Check
 ================================
 
-*View the [source of this content](http://github.github.com/github-flavored-markdown/sample_content.html).*
+*This program was developed to review the max values of integer fields in an attempt to anticipate an overflow catastrophe.*
 
-Let's get the whole "linebreak" thing out of the way. The next paragraph contains two phrases separated by a single newline character:
+Usage:
+1. create table int_overflow:  
+CREATE TABLE `int_overflow` (  
+  `schema_name` varchar(64) DEFAULT NULL,  
+  `table_name` varchar(64) DEFAULT NULL,  
+  `column_name` varchar(64) DEFAULT NULL,  
+  `column_type` varchar(32) DEFAULT NULL,  
+  `max_value` bigint(20) DEFAULT NULL,  
+  `of_pct` int(11) DEFAULT NULL,  
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1  
+  
+2. Edit db connection info in int_overflow.pl  
+  
+3. execute script without arguments: ./int_overflow.pl  
 
-Roses are red
-Violets are blue
-
-The next paragraph has the same phrases, but now they are separated by two spaces and a newline character:
-
-Roses are red  
-Violets are blue
-
-Oh, and one thing I cannot stand is the mangling of words with multiple underscores in them like perform_complicated_task or do_this_and_do_that_and_another_thing.
