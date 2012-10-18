@@ -44,6 +44,7 @@ sub main {
   my $port_r = 3306;
   my $user_r = "root";
   my $pass_r = "pass";
+  my $schema_r = "palomino";
   
   # Initialize connections to database
   my $dbn="dbi:mysql:information_schema:".$host.":".$port;
@@ -51,7 +52,7 @@ sub main {
   my $dbn_r="dbi:mysql:information_schema:".$host_r.":".$port_r;
   my $dbh_r=DBI->connect($dbn_r, $user_r, $pass_r) or die "Unable to connect: $DBI::errstr\n";
  
-  my $select_query="select table_schema, table_name, column_name, column_type from columns where table_schema = 'ebonydb' and column_type like '%int%'";
+  my $select_query="select table_schema, table_name, column_name, column_type from columns where table_schema not in ('information_schema', 'mysql', 'maatkit', 'percona') and column_type like '%int%'";
   my $select_h = $dbh->prepare($select_query) or die "Unable to prepare: $DBI::errstr\n";
   $select_h->execute() or die "Unable to execute: $DBI::errstr\n";
 
@@ -102,8 +103,8 @@ sub main {
       else { $of_pct = 0 }      
     }
                 
-    # Insert review information into palomino schema in a time series fashion
-    my $insert_review="insert into palomino.int_overflow values (\'$table_schema\', \'$table_name\', \'$column_name\', \'$int_type\', $max_int, $of_pct, now\(\))";
+    # Insert review information in a time series fashion
+    my $insert_review="insert into $schema_r.int_overflow values (\'$table_schema\', \'$table_name\', \'$column_name\', \'$int_type\', $max_int, $of_pct, now\(\))";
     my $select_h3 = $dbh_r->prepare($insert_review) or die "Unable to prepare: $DBI::errstr\n";
     $select_h3->execute() or die "Unable to execute: $DBI::errstr\n";
     $select_h3->finish();
