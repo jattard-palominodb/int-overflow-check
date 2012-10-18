@@ -45,6 +45,7 @@ sub main {
   my $user_r = "root";
   my $pass_r = "pass";
   my $schema_r = "palomino";
+  my $table_r = "int_overflow";
   
   # Initialize connections to database
   my $dbn="dbi:mysql:information_schema:".$host.":".$port;
@@ -65,7 +66,7 @@ sub main {
     my $column_type = $row[3];
     
     # Retrieve max value of integer
-    my $select_max="select max($column_name) from $table_schema.$table_name";
+    my $select_max="select max($column_name) from $table_schema.\`$table_name\`";
     my $select_h2 = $dbh->prepare($select_max) or die "Unable to prepare: $DBI::errstr\n";
     $select_h2->execute() or die "Unable to execute: $DBI::errstr\n";
     my $max_int = $select_h2->fetchrow_array;
@@ -104,7 +105,7 @@ sub main {
     }
                 
     # Insert review information in a time series fashion
-    my $insert_review="insert into $schema_r.int_overflow values (\'$table_schema\', \'$table_name\', \'$column_name\', \'$int_type\', $max_int, $of_pct, now\(\))";
+    my $insert_review="insert into $schema_r.".$table_r." values (\'$table_schema\', \'$table_name\', \'$column_name\', \'$column_type\', $max_int, $of_pct, now\(\))";
     my $select_h3 = $dbh_r->prepare($insert_review) or die "Unable to prepare: $DBI::errstr\n";
     $select_h3->execute() or die "Unable to execute: $DBI::errstr\n";
     $select_h3->finish();
