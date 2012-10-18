@@ -4,7 +4,8 @@ Integer Overflow MySQL Check
 *This program was developed to review the max values of integer fields in an attempt to anticipate an overflow catastrophe.*
 
 Usage:
-1. create table int_overflow:  
+    
+* create table int_overflow:  
 CREATE TABLE `int_overflow` (  
   `schema_name` varchar(64) DEFAULT NULL,  
   `table_name` varchar(64) DEFAULT NULL,  
@@ -14,8 +15,8 @@ CREATE TABLE `int_overflow` (
   `of_pct` int(11) DEFAULT NULL,  
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1  
+    
+* Edit db connection info in int_overflow.pl  
   
-2. Edit db connection info in int_overflow.pl  
-  
-3. execute script without arguments: ./int_overflow.pl  
+* execute script without arguments: ./int_overflow.pl  
 
