@@ -50,6 +50,7 @@ sub main {
   my $dbh=DBI->connect($dbn, $user, $pass) or die "Unable to connect: $DBI::errstr\n";
   my $dbn_r="dbi:mysql:information_schema:".$host_r.":".$port_r;
   my $dbh_r=DBI->connect($dbn_r, $user_r, $pass_r) or die "Unable to connect: $DBI::errstr\n";
+ 
   my $select_query="select table_schema, table_name, column_name, column_type from columns where table_schema = 'ebonydb' and column_type like '%int%'";
   my $select_h = $dbh->prepare($select_query) or die "Unable to prepare: $DBI::errstr\n";
   $select_h->execute() or die "Unable to execute: $DBI::errstr\n";
