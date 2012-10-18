@@ -108,8 +108,9 @@ sub main {
     $select_h3->finish();
   }
   
-  # Save the environment and close connections to database
   $select_h->finish();
+  
+  # Save the environment and close connections to database
   $dbh->disconnect;
   $dbh_r->disconnect;
   
